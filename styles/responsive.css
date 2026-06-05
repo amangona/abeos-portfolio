@@ -1,0 +1,155 @@
+/* ============================================================
+   responsive.css — phone layout (<=760px)
+   Full-screen stacked windows, dock as bottom tab bar,
+   condensed menubar, hidden sticky/icons.
+   ============================================================ */
+
+@media (max-width: 760px) {
+  :root {
+    --menubar-h: 44px;
+    --dock-h: 60px;
+  }
+
+  /* ---- menubar: condense (hide menus, keep brand/CRT/Hire/clock) ---- */
+  #menubar {
+    gap: 2px;
+    padding: 0 8px;
+  }
+  .menubar__menus {
+    display: none;
+  }
+  .menubar__brand {
+    font-size: 24px;
+  }
+  .menubar__item {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .menubar__cta {
+    padding: 8px 12px;
+  }
+
+  /* ---- desktop icons: hide on phone ---- */
+  #desktop-icons {
+    display: none;
+  }
+
+  /* ---- sticky note: hidden ---- */
+  #sticky-note {
+    display: none;
+  }
+
+  /* ---- windows: full-screen stacked between menubar and dock ---- */
+  #screen {
+    overflow: visible;
+  }
+
+  #windows {
+    position: absolute;
+    inset: 0;
+  }
+
+  .win {
+    position: absolute !important;
+    top: var(--menubar-h) !important;
+    left: 0 !important;
+    right: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: calc(100% - var(--menubar-h) - var(--dock-h)) !important;
+    max-height: calc(100% - var(--menubar-h) - var(--dock-h)) !important;
+    min-height: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    /* transform-based drag offsets are neutralized */
+    transform: none !important;
+  }
+
+  /* dragging is visually disabled */
+  .win__bar {
+    cursor: default;
+    height: 46px;
+  }
+  .win__bar:active {
+    cursor: default;
+  }
+
+  /* keep traffic lights an easy tap target */
+  .win__btn {
+    width: 16px;
+    height: 16px;
+  }
+
+  .win__body {
+    padding: 16px 16px 18px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* skills reflow comfortably */
+  .skill {
+    grid-template-columns: 92px 1fr;
+    gap: 10px;
+  }
+
+  /* ---- dock: fixed bottom tab bar, horizontal scroll ---- */
+  #dock {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+    align-self: stretch;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    height: var(--dock-h);
+    padding: 8px 12px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    z-index: 40;
+    /* respect home-indicator inset */
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+    height: calc(var(--dock-h) + env(safe-area-inset-bottom));
+  }
+  #dock::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* tap targets >= 40px; no hover-scale on touch */
+  .dock__item {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+  }
+  .dock__item:hover,
+  .dock__item:focus-visible {
+    transform: none;
+    box-shadow: 2px 2px 0 rgba(58, 44, 34, 0.6);
+  }
+  .dock__item:active {
+    transform: scale(0.94);
+  }
+
+  /* boot logo a touch smaller so the bar/log fit */
+  .boot__logo {
+    font-size: clamp(64px, 22vw, 104px);
+  }
+}
+
+/* very small / landscape-short phones: trim chrome height */
+@media (max-width: 760px) and (max-height: 480px) {
+  .win__body {
+    padding-top: 12px;
+  }
+}

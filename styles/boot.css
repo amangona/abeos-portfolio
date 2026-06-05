@@ -1,0 +1,126 @@
+/* ============================================================
+   boot.css — full-screen boot splash
+   ============================================================ */
+
+#boot {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* warm poolside backdrop (in case canvas hasn't painted) */
+  background:
+    radial-gradient(110% 70% at 50% 18%, rgba(255, 248, 230, 0.7) 0%, rgba(255, 248, 230, 0) 50%),
+    linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 55%, var(--bg-2) 100%);
+  color: var(--ink);
+}
+
+.boot__inner {
+  width: min(440px, 86vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+}
+
+/* big pixel logo in dark ink with a crisp warm hard shadow + gentle fade-in */
+.boot__logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(64px, 16vw, 118px);
+  line-height: 0.9;
+  letter-spacing: 2px;
+  color: var(--ink);
+  text-shadow: 3px 3px 0 rgba(240, 138, 75, 0.55);
+  animation: boot-fade 0.8s var(--ease) both;
+}
+
+@keyframes boot-fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.boot__sub {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-top: -4px;
+}
+
+/* progress bar */
+.boot__bar {
+  width: 100%;
+  height: 8px;
+  margin-top: 8px;
+  border-radius: 4px;
+  background: #ead8b8;
+  border: 1.5px solid var(--ink);
+  box-shadow: inset 0 1px 2px rgba(58, 44, 34, 0.25);
+  overflow: hidden;
+}
+
+.boot__bar-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--pink), var(--gold), var(--cyan));
+  transition: width 0.3s var(--ease);
+}
+
+/* boot log */
+.boot__log {
+  width: 100%;
+  min-height: 5.4em;
+  max-height: 7.2em;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: left;
+  color: var(--muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+  opacity: 0.95;
+}
+
+/* skip button — bottom-right */
+.boot__skip {
+  position: fixed;
+  right: 18px;
+  bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--ink);
+  padding: 8px 14px;
+  border: 1.5px solid var(--ink);
+  border-radius: 7px;
+  background: var(--glass-strong);
+  box-shadow: 2px 2px 0 rgba(58, 44, 34, 0.7);
+  transition: color 0.18s var(--ease), border-color 0.18s var(--ease),
+    background 0.18s var(--ease), transform 0.12s var(--ease),
+    box-shadow 0.16s var(--ease);
+}
+
+.boot__skip:hover,
+.boot__skip:focus-visible {
+  color: var(--ink);
+  background: #fff7e4;
+}
+
+.boot__skip:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 rgba(58, 44, 34, 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot__logo {
+    animation: none;
+  }
+  .boot__bar-fill {
+    transition: none;
+  }
+}

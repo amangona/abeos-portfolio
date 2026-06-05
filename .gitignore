@@ -1,0 +1,34 @@
+# ───────────────────────────────────────────────────────────
+# Personal content — kept OUT of the public repo.
+# (The site still uses these locally; they just aren't published.)
+# Copy scripts/data.example.js → scripts/data.js and fill it in.
+# ───────────────────────────────────────────────────────────
+scripts/data.js
+resume.pdf
+assets/avatar.png
+assets/avatar-square.jpg
+
+# ─── OS / editor cruft ───
+.DS_Store
+.AppleDouble
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*~
+
+# ─── Node / tooling (only if you add any) ───
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ─── Secrets / env ───
+.env
+.env.*
+
+# ─── Local dev artifacts ───
+*.log
+.cache/
+dist/
+.netlify/

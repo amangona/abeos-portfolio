@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffb89a"/>
+      <stop offset="0.52" stop-color="#f7e6c8"/>
+      <stop offset="1" stop-color="#bfe3df"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd98a"/>
+      <stop offset="1" stop-color="#ef6f5e"/>
+    </linearGradient>
+  </defs>
+  <!-- classic-Mac rounded square with a crisp dark border -->
+  <rect x="1.25" y="1.25" width="29.5" height="29.5" rx="7" fill="url(#sky)"
+        stroke="#3a2c22" stroke-width="2"/>
+  <!-- soft poolside sun -->
+  <circle cx="16" cy="14.5" r="6.6" fill="url(#sun)"/>
+  <!-- horizon / pool line -->
+  <rect x="2.5" y="21.5" width="27" height="1.6" rx="0.8" fill="#3fa9a0" opacity="0.6"/>
+</svg>

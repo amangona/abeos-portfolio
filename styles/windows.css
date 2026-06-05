@@ -1,0 +1,614 @@
+/* ============================================================
+   windows.css — window chrome + all window-body content
+   (work, skills, projects, resume, about) + shared bits.
+   Chat UI lives in chat.css.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. WINDOW CHROME — glassy translucent panel
+   ------------------------------------------------------------ */
+.win {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  min-width: 240px;
+  min-height: 160px;
+  max-width: calc(100% - 16px);
+  max-height: calc(100% - 16px);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  border: 1.5px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: var(--shadow-win);
+  color: var(--ink);
+  overflow: hidden;
+  transition: box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+
+/* active window — darker border + slightly stronger warm shadow */
+.win--active {
+  border-color: var(--ink);
+  box-shadow:
+    0 18px 34px -14px rgba(74, 48, 28, 0.58),
+    0 0 0 1px rgba(58, 44, 34, 0.3);
+}
+
+/* ---- title bar — classic System 7 pinstripe ---- */
+.win__bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 38px;
+  padding: 0 12px;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(58, 44, 34, 0.55) 0px,
+    rgba(58, 44, 34, 0.55) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  border-bottom: 1.5px solid var(--ink);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.win__bar:active {
+  cursor: grabbing;
+}
+
+/* inactive windows: lighter pinstripe */
+.win:not(.win--active) .win__bar {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(58, 44, 34, 0.22) 0px,
+    rgba(58, 44, 34, 0.22) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+/* lights sit pinned left over the pinstripe */
+.win__lights {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  left: 12px;
+}
+
+/* classic beveled square-ish buttons */
+.win__btn {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  border: 1px solid var(--ink);
+  position: relative;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: filter 0.15s var(--ease), transform 0.15s var(--ease);
+}
+
+.win__btn:hover {
+  filter: brightness(1.08);
+}
+
+.win__btn:active {
+  transform: scale(0.9);
+}
+
+.win__btn--close {
+  background: var(--pink);
+}
+.win__btn--min {
+  background: var(--gold);
+}
+.win__btn--zoom {
+  background: var(--cyan);
+}
+
+/* glyph hint on hover (purely decorative) */
+.win__lights:hover .win__btn::before {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: rgba(58, 44, 34, 0.7);
+  line-height: 1;
+}
+.win__lights:hover .win__btn--close::before { content: "\00d7"; }
+.win__lights:hover .win__btn--min::before   { content: "\2013"; }
+.win__lights:hover .win__btn--zoom::before  { content: "+"; }
+
+/* centered title sits on its own cream notch so pinstripes don't cross it */
+.win__title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.4px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 5px 12px;
+  background: var(--glass);
+  border-radius: 4px;
+}
+
+/* ---- body (scrollable content area) ---- */
+.win__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 18px 20px 20px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--glass);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(58, 44, 34, 0.35) transparent;
+}
+
+.win__body::-webkit-scrollbar { width: 10px; }
+.win__body::-webkit-scrollbar-thumb {
+  background: rgba(58, 44, 34, 0.3);
+  border-radius: 99px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+.win__body::-webkit-scrollbar-thumb:hover {
+  background: rgba(58, 44, 34, 0.45);
+  background-clip: content-box;
+}
+
+/* ------------------------------------------------------------
+   2. SHARED PRIMITIVES — .tag, .btn
+   ------------------------------------------------------------ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  line-height: 1;
+  padding: 5px 9px;
+  margin: 0 4px 4px 0;
+  color: var(--cyan);
+  background: rgba(63, 169, 160, 0.1);
+  border: 1px solid rgba(63, 169, 160, 0.5);
+  border-radius: 99px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  padding: 8px 15px;
+  border: 1.5px solid var(--ink);
+  border-radius: 7px;
+  background: var(--glass-strong);
+  box-shadow: 2px 2px 0 rgba(58, 44, 34, 0.9);
+  transition: background 0.18s var(--ease), border-color 0.18s var(--ease),
+    transform 0.12s var(--ease), box-shadow 0.18s var(--ease);
+}
+
+.btn:hover {
+  background: #fff7e4;
+}
+
+.btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 rgba(58, 44, 34, 0.9);
+}
+
+.btn--primary {
+  color: #faf3e2;
+  border-color: var(--ink);
+  background: var(--pink);
+  box-shadow: 2px 2px 0 rgba(58, 44, 34, 0.9);
+}
+
+.btn--primary:hover {
+  filter: brightness(1.04);
+  background: var(--pink);
+}
+
+.btn--primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 rgba(58, 44, 34, 0.9);
+}
+
+/* ------------------------------------------------------------
+   3. WORK FUNNEL  (experience timeline)
+   ------------------------------------------------------------ */
+.funnel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.funnel__stage {
+  position: relative;
+  padding: 14px 16px 14px 18px;
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--violet);
+  border-radius: var(--radius-sm);
+  background: var(--glass-strong);
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+
+.funnel__stage:hover {
+  background: #fff7e4;
+}
+
+/* highlighted / featured roles */
+.funnel__stage.is-growth {
+  border-left-color: var(--pink);
+  background: linear-gradient(
+    100deg,
+    rgba(239, 111, 94, 0.14),
+    rgba(239, 111, 94, 0.04) 60%
+  );
+  box-shadow: 2px 2px 0 rgba(58, 44, 34, 0.18);
+}
+
+.funnel__stage.is-growth::after {
+  content: "featured";
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--pink);
+  opacity: 0.85;
+}
+
+.funnel__role {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.funnel__company {
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.funnel__meta {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.funnel__summary {
+  margin-top: 8px;
+  color: var(--ink);
+}
+
+.funnel__highlights {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.funnel__highlights li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.funnel__highlights li::before {
+  content: "▸";
+  position: absolute;
+  left: 2px;
+  color: var(--cyan);
+}
+
+.funnel__stage .tag {
+  margin-top: 6px;
+}
+
+/* ------------------------------------------------------------
+   4. SKILLS  (animated bars)
+   ------------------------------------------------------------ */
+.skills {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.skills__group-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--peach);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.skill {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 9px;
+}
+
+.skill__name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.skill__bar {
+  position: relative;
+  height: 9px;
+  border-radius: 4px;
+  background: #ead8b8;
+  border: 1px solid var(--line);
+  box-shadow: inset 0 1px 2px rgba(58, 44, 34, 0.25);
+  overflow: hidden;
+}
+
+.skill__fill {
+  height: 100%;
+  width: 0; /* main.js sets target inline; animates in */
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--pink), var(--gold), var(--cyan));
+  transition: width 0.9s var(--ease);
+}
+
+/* ------------------------------------------------------------
+   6. RÉSUMÉ VIEW
+   ------------------------------------------------------------ */
+.resume-view {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+}
+
+.resume-view__frame {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 360px;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  box-shadow: 0 8px 18px -12px rgba(74, 48, 28, 0.5);
+}
+
+.resume-view__actions {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ------------------------------------------------------------
+   7. ABOUT
+   ------------------------------------------------------------ */
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.about__head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.about__avatar {
+  width: 72px;
+  height: 72px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1.5px solid var(--ink);
+  box-shadow: 2px 2px 0 rgba(58, 44, 34, 0.4);
+  background: var(--bg-2);
+}
+
+.about__bio {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--ink);
+}
+
+.about__bio p {
+  color: var(--muted);
+}
+
+.about__facts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  background: var(--glass-strong);
+}
+
+.about__facts li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.about__facts li::before {
+  content: "✦";
+  position: absolute;
+  left: 2px;
+  color: var(--gold);
+}
+
+.about__links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.linkrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ------------------------------------------------------------
+   6b. PROJECTS
+   ------------------------------------------------------------ */
+.projects {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.project {
+  padding: 14px 16px;
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--cyan);
+  border-radius: var(--radius-sm);
+  background: var(--glass-strong);
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease),
+    box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.project:hover {
+  background: #fff7e4;
+  transform: translateY(-2px);
+  box-shadow: 2px 4px 0 rgba(58, 44, 34, 0.5);
+}
+
+.project__head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.project__emoji {
+  font-size: 24px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 3px rgba(74, 48, 28, 0.3));
+}
+
+/* real App Store icon */
+.project__icon {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  border: 1.5px solid var(--line);
+  box-shadow: 1px 1px 0 rgba(58, 44, 34, 0.35);
+  background: var(--glass-strong);
+}
+
+.project__name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.project__blurb {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.project__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 11px;
+}
+
+/* ------------------------------------------------------------
+   7b. main.js content extras (intro/about head/resume note)
+   ------------------------------------------------------------ */
+.funnel__lead {
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin-bottom: 2px;
+}
+
+.plan__badge {
+  display: inline-flex;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding: 5px 12px;
+  border: 1px solid rgba(240, 181, 63, 0.6);
+  border-radius: 99px;
+}
+
+.about__id h2 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.about__title {
+  color: var(--gold);
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-top: 3px;
+}
+.about__loc {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.tags { margin-top: 6px; }
+
+.resume-view__fallback {
+  flex: 0 0 auto;
+  font-size: 11.5px;
+  color: var(--faint);
+  text-align: center;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   8. REDUCED MOTION
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .win,
+  .funnel__stage,
+  .btn,
+  .skill__fill,
+  .win__btn {
+    transition: none !important;
+  }
+  .skill__fill {
+    /* still show the value, just no sweep */
+    transition: none !important;
+  }
+}

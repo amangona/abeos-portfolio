@@ -1,0 +1,437 @@
+/* ============================================================
+   desktop.css — design tokens + background/CRT, menubar,
+   screen, desktop icons, sticky note, dock
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. DESIGN TOKENS  (shared — chat.css consumes these too)
+   ------------------------------------------------------------ */
+:root {
+  /* warm poolside sky / surface */
+  --bg-0: #ffb89a; /* warm coral-peach (sky top) */
+  --bg-1: #f7e6c8; /* cream (sky mid) */
+  --bg-2: #bfe3df; /* soft aqua (low horizon / pool) */
+
+  /* ink — dark warm browns */
+  --ink: #3a2c22;
+  --muted: #7a6a58;
+  --faint: #a7967f;
+
+  /* warm classic-Mac accents */
+  --cyan: #3fa9a0;   /* teal */
+  --pink: #ef6f5e;   /* coral / salmon */
+  --gold: #f0b53f;   /* mustard */
+  --peach: #f08a4b;  /* warm orange */
+  --violet: #5b7aa6; /* denim blue */
+
+  /* surfaces — opaque cream "paper" tones */
+  --glass: rgba(250, 243, 226, 0.97);       /* window body paper #faf3e2 */
+  --glass-strong: rgba(243, 231, 206, 0.98); /* secondary panel #f3e7ce */
+  --glass-bar: rgba(246, 236, 214, 0.95);    /* menubar / dock / titlebar #f6ecd6 */
+
+  /* borders — crisp dark warm outlines */
+  --line: rgba(58, 44, 34, 0.55);
+  --line-soft: rgba(58, 44, 34, 0.28);
+  --radius: 8px;
+  --radius-sm: 7px;
+
+  /* subtle warm rings (replace neon glow) */
+  --glow-cyan: 0 0 0 1px rgba(63, 169, 160, 0.55), 2px 2px 0 rgba(58, 44, 34, 0.22);
+  --glow-pink: 0 0 0 1px rgba(239, 111, 94, 0.55), 2px 2px 0 rgba(58, 44, 34, 0.22);
+  --shadow-win: 0 14px 28px -14px rgba(74, 48, 28, 0.5), 0 0 0 1px rgba(58, 44, 34, 0.18);
+  --shadow-bar: 0 6px 16px -10px rgba(74, 48, 28, 0.4);
+
+  /* layout metrics */
+  --menubar-h: 34px;
+  --dock-h: 74px;
+
+  /* type */
+  --font-ui: "Space Grotesk", system-ui, sans-serif;
+  --font-display: "Pixelify Sans", monospace;
+  --font-mono: "DM Mono", ui-monospace, "SF Mono", monospace;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+body {
+  background: var(--bg-0);
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------
+   2. BACKGROUND CANVAS + CRT OVERLAY
+   ------------------------------------------------------------ */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  display: block;
+  /* graceful fallback before canvas paints — warm poolside sky */
+  background:
+    linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 52%, var(--bg-2) 100%);
+}
+
+#crt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  /* very subtle warm screen texture (gentle horizontal sheen) */
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(120, 84, 48, 0.05) 0px,
+      rgba(120, 84, 48, 0.05) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+  transition: opacity 0.4s var(--ease);
+}
+
+/* soft warm vignette as a gentle additive layer */
+#crt-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 100% at 50% 42%,
+    transparent 60%,
+    rgba(120, 70, 30, 0.14) 100%
+  );
+  mix-blend-mode: normal;
+}
+
+body.no-crt #crt-overlay {
+  opacity: 0;
+}
+
+/* ------------------------------------------------------------
+   3. DESKTOP SHELL
+   ------------------------------------------------------------ */
+#desktop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ------------------------------------------------------------
+   4. MENUBAR — frosted top bar
+   ------------------------------------------------------------ */
+#menubar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  height: var(--menubar-h);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 10px;
+  background: var(--glass-bar);
+  -webkit-backdrop-filter: blur(4px) saturate(1.1);
+  backdrop-filter: blur(4px) saturate(1.1);
+  border-bottom: 1px solid var(--line);
+  box-shadow: var(--shadow-bar);
+  font-size: 13px;
+  user-select: none;
+}
+
+.menubar__brand {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.5px;
+  color: var(--ink);
+  padding: 0 8px 0 2px;
+  text-shadow: 1px 1px 0 rgba(240, 138, 75, 0.4);
+}
+
+.menubar__sun {
+  color: var(--gold);
+  text-shadow: 1px 1px 0 rgba(240, 138, 75, 0.5);
+}
+
+.menubar__menus {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* generic menubar buttons (menus + items) */
+.menubar__menu,
+.menubar__item {
+  appearance: none;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 5px 10px;
+  border-radius: 8px;
+  transition: background 0.18s var(--ease), color 0.18s var(--ease);
+}
+
+.menubar__menu:hover,
+.menubar__item:hover {
+  background: rgba(58, 44, 34, 0.08);
+  color: var(--ink);
+}
+
+.menubar__spacer {
+  flex: 1 1 auto;
+}
+
+/* CRT toggle reflects pressed state — classic button */
+#crt-toggle {
+  font-family: var(--font-mono);
+  letter-spacing: 1px;
+  border: 1.5px solid var(--line);
+  background: var(--glass-strong);
+}
+
+#crt-toggle[aria-pressed="true"] {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  box-shadow: 1px 1px 0 rgba(58, 44, 34, 0.5);
+}
+
+/* Hire CTA — coral classic button */
+.menubar__cta {
+  color: #faf3e2;
+  font-weight: 700;
+  border: 1.5px solid var(--ink);
+  background: var(--pink);
+  box-shadow: 2px 2px 0 rgba(58, 44, 34, 0.9);
+}
+
+.menubar__cta:hover {
+  color: #faf3e2;
+  filter: brightness(1.04);
+}
+
+.menubar__cta:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 rgba(58, 44, 34, 0.9);
+}
+
+.menubar__clock {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink);
+  padding: 0 6px 0 10px;
+  letter-spacing: 0.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------
+   5. SCREEN
+   ------------------------------------------------------------ */
+#screen {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#windows {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none; /* windows themselves re-enable */
+}
+
+#windows > * {
+  pointer-events: auto;
+}
+
+/* ------------------------------------------------------------
+   6. DESKTOP ICONS  (top-left)
+   ------------------------------------------------------------ */
+#desktop-icons {
+  position: absolute;
+  top: calc(var(--menubar-h) + 14px);
+  left: 16px;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 92px;
+}
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  padding: 10px 6px 8px;
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  text-align: center;
+  transition: background 0.16s var(--ease), transform 0.16s var(--ease);
+}
+
+.desktop-icon:hover,
+.desktop-icon:focus-visible {
+  background: rgba(255, 245, 222, 0.5);
+}
+
+.desktop-icon:active {
+  transform: scale(0.96);
+}
+
+.desktop-icon__glyph,
+.desktop-icon span:first-child {
+  font-size: 30px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 3px rgba(74, 48, 28, 0.3));
+}
+
+.desktop-icon__label,
+.desktop-icon span:last-child {
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+  text-shadow: 0 1px 2px rgba(255, 248, 230, 0.9);
+}
+
+/* ------------------------------------------------------------
+   7. STICKY NOTE — rotated paper card with a pin
+   ------------------------------------------------------------ */
+#sticky-note {
+  position: absolute;
+  right: 34px;
+  bottom: 26px;
+  z-index: 16;
+  width: 218px;
+  padding: 22px 18px 18px;
+  background: linear-gradient(170deg, #ffeeb0, #ffe9a8);
+  color: #4a3410;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  line-height: 1.45;
+  border-radius: 3px;
+  transform: rotate(-3.5deg);
+  box-shadow:
+    0 12px 24px -12px rgba(74, 48, 28, 0.45),
+    0 1px 0 rgba(255, 255, 255, 0.4) inset;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+#sticky-note:hover,
+#sticky-note:focus-visible {
+  transform: rotate(-1.5deg) scale(1.02);
+  box-shadow: 0 18px 30px -14px rgba(74, 48, 28, 0.5);
+}
+
+#sticky-note b {
+  color: var(--pink);
+}
+
+.sticky-note__pin {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff9e8a, var(--pink) 55%, #c84a3a);
+  box-shadow: 0 3px 5px rgba(74, 48, 28, 0.45);
+}
+
+/* ------------------------------------------------------------
+   8. DOCK — frosted bottom bar, macOS-ish hover scale
+   ------------------------------------------------------------ */
+#dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  margin: 0 auto;
+  width: -moz-fit-content;
+  width: fit-content;
+  z-index: 40;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 8px 12px;
+  max-width: calc(100vw - 24px);
+  background: var(--glass-bar);
+  -webkit-backdrop-filter: blur(4px) saturate(1.1);
+  backdrop-filter: blur(4px) saturate(1.1);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 10px 22px -12px rgba(74, 48, 28, 0.5);
+}
+
+/* dock button holds an emoji glyph (.dock__icon) + a label that we hide
+   in favor of the native title tooltip (macOS-style), + a running dot. */
+.dock__icon {
+  font-size: 28px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 3px rgba(74, 48, 28, 0.3));
+}
+.dock__label {
+  display: none;
+}
+
+.dock__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 9px;
+  font-size: 28px;
+  line-height: 1;
+  background: var(--glass-strong);
+  border: 1.5px solid var(--line);
+  transform-origin: bottom center;
+  transition: transform 0.2s var(--ease), background 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
+}
+
+.dock__item:hover,
+.dock__item:focus-visible {
+  transform: translateY(-6px);
+  background: #fff7e4;
+  box-shadow: 2px 4px 0 rgba(58, 44, 34, 0.6);
+}
+
+/* running-dot indicator — small coral square */
+.dock__item.is-running::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 1px;
+  background: var(--pink);
+  box-shadow: 0 1px 2px rgba(58, 44, 34, 0.4);
+}
+
+/* ------------------------------------------------------------
+   9. REDUCED MOTION
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .desktop-icon,
+  .dock__item,
+  #sticky-note,
+  #crt-overlay,
+  .menubar__menu,
+  .menubar__item {
+    transition: none !important;
+  }
+}

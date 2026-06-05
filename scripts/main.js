@@ -166,6 +166,7 @@
   }
 
   function renderChat(body) {
+    body.classList.add('win__body--chat');   // edge-to-edge: no body padding
     var wrap = document.createElement('div');
     wrap.className = 'chat-host';
     body.appendChild(wrap);

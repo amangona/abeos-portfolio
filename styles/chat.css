@@ -4,6 +4,13 @@
    Emitted by chat.js (+ .chat-host wrapper from main.js).
    ============================================================ */
 
+/* the chat window's body is padding-free so the chat fills it exactly
+   (its own sub-elements carry the padding) — fixes the dead gap above the dock */
+.win__body--chat {
+  padding: 0;
+  overflow: hidden;
+}
+
 /* host wrapper fills the window body so the log scrolls internally */
 .chat-host {
   height: 100%;
@@ -14,8 +21,6 @@
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  /* counter the .win__body padding so the chat reaches the edges */
-  margin: -18px -20px -20px;
 }
 
 /* ---- scrolling message log ---- */

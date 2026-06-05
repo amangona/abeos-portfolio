@@ -116,7 +116,9 @@
     max-width: 100%;
     width: 100%;
     align-self: stretch;
-    justify-content: flex-start;
+    /* center the icons; "safe" falls back to left-aligned + scrollable
+       if they ever overflow on a very narrow phone (so none get cut off) */
+    justify-content: safe center;
     align-items: center;
     gap: 8px;
     height: var(--dock-h);

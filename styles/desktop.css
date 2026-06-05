@@ -53,8 +53,15 @@
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
+/* Base page color = the menubar/dock cream, NOT the coral sky. The animated
+   canvas paints the gradient over the visible viewport; this color is what
+   shows in the iOS safe areas (status bar / home indicator), so those strips
+   blend with the chrome instead of flashing coral. */
+html {
+  background: #f6ecd6;
+}
 body {
-  background: var(--bg-0);
+  background: #f6ecd6;
   color: var(--ink);
 }
 
